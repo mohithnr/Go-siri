@@ -222,7 +222,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Calving Reminders */}
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
           <div className="px-6 py-4 border-b border-gray-200">
             <h2 className="text-xl font-semibold text-gray-900">🐣 Upcoming Calving Reminders</h2>
             <p className="text-sm text-gray-600 mt-1">Stay prepared for new arrivals</p>
@@ -266,6 +266,58 @@ export default function DashboardPage() {
               </a>
             </div>
           )}
+        </div>
+
+        {/* AI Assistant Section */}
+        <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl shadow-lg overflow-hidden">
+          <div className="px-6 py-6">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-3xl">🤖</span>
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">AI Farming Assistant</h2>
+              <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
+                Get instant help with cow health, breeding, nutrition, and farming questions. 
+                Our AI assistant speaks your language and provides expert advice 24/7.
+              </p>
+              
+              <div className="grid md:grid-cols-3 gap-4 mb-6">
+                <div className="bg-white p-4 rounded-lg border border-gray-200">
+                  <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <span className="text-blue-600 text-lg">🌍</span>
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-1">Multi-Language Support</h3>
+                  <p className="text-sm text-gray-600">Get answers in Hindi, Telugu, Tamil, and 7+ other languages</p>
+                </div>
+                
+                <div className="bg-white p-4 rounded-lg border border-gray-200">
+                  <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <span className="text-green-600 text-lg">🐄</span>
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-1">Expert Farming Advice</h3>
+                  <p className="text-sm text-gray-600">Professional guidance on cow health, breeding, and nutrition</p>
+                </div>
+                
+                <div className="bg-white p-4 rounded-lg border border-gray-200">
+                  <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <span className="text-purple-600 text-lg">⚡</span>
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-1">Instant Help</h3>
+                  <p className="text-sm text-gray-600">24/7 assistance for all your dairy farming questions</p>
+                </div>
+              </div>
+              
+              <div className="bg-white p-4 rounded-lg border border-gray-200 max-w-md mx-auto">
+                <p className="text-sm text-gray-600 mb-3">
+                  <strong>Quick Start:</strong> Click the chat button in the bottom right corner to begin!
+                </p>
+                <div className="flex items-center justify-center space-x-2 text-green-600">
+                  <span className="text-sm">💬</span>
+                  <span className="text-sm font-medium">Chat button available on all pages</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

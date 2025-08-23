@@ -12,6 +12,7 @@ const cowRoutes = require('./routes/cows');
 const milkRoutes = require('./routes/milk');
 const financeRoutes = require('./routes/finance');
 const breedingRoutes = require('./routes/breeding');
+const chatbotRoutes = require('./routes/chatbot');
 
 const app = express();
 
@@ -42,6 +43,7 @@ app.use('/api/cows', cowRoutes);
 app.use('/api/milk', milkRoutes);
 app.use('/api/finance', financeRoutes );
 app.use('/api/breeding', breedingRoutes);
+app.use('/api/chatbot', chatbotRoutes);
 
 const PORT = process.env.PORT || 5000;
 
