@@ -46,10 +46,14 @@ export default function ReportsPage() {
   }, [token]);
 
   if (!token) return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
-      <div className="text-center">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Please Login</h2>
-        <a href="/login" className="bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-gray-50 to-emerald-50 flex items-center justify-center p-4">
+      <div className="text-center bg-white rounded-xl shadow-lg p-8 max-w-md w-full">
+        <div className="text-6xl mb-6">📊</div>
+        <h2 className="text-2xl font-bold text-blue-700 mb-4">Access Required</h2>
+        <p className="text-gray-600 mb-6">Please login to access reports and analytics</p>
+        <a href="/login" 
+           className="bg-gradient-to-r from-blue-700 to-emerald-600 hover:from-blue-800 hover:to-emerald-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 shadow-md hover:shadow-lg inline-flex items-center">
+          <span className="mr-2">🔐</span>
           Go to Login
         </a>
       </div>
@@ -57,111 +61,159 @@ export default function ReportsPage() {
   );
 
   if (loading) return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-        <p className="text-gray-600">Loading reports...</p>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-gray-50 to-emerald-50 flex items-center justify-center p-4">
+      <div className="text-center bg-white rounded-xl shadow-lg p-8 max-w-md w-full">
+        <div className="flex justify-center mb-6">
+          <div className="relative">
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-100"></div>
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-t-blue-700 absolute top-0 left-0"></div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-xl">📈</span>
+            </div>
+          </div>
+        </div>
+        <h3 className="text-lg font-medium text-blue-700 mb-2">Loading Reports</h3>
+        <p className="text-gray-600">Analyzing your dairy data...</p>
       </div>
     </div>
   );
 
+  const totalIncome = finance.reduce((sum, f) => sum + f.milkIncome, 0);
+  const totalExpenses = finance.reduce((sum, f) => sum + f.expense, 0);
+  const netProfit = totalIncome - totalExpenses;
+  const totalMilkLiters = milk.reduce((sum, m) => sum + m.liters, 0);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-gray-50 to-emerald-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Reports & Analytics</h1>
-          <p className="text-gray-600">Data-driven insights for your dairy operations</p>
-        </div>
-
-        {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <div className="flex items-center">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
-                <span className="text-blue-600 text-xl">📊</span>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Total Data Points</p>
-                <p className="text-2xl font-bold text-gray-900">{finance.length + milk.length}</p>
-              </div>
+          <div className="flex items-center space-x-4 mb-4">
+            <div className="w-12 h-12 bg-gradient-to-r from-blue-700 to-emerald-600 rounded-xl flex items-center justify-center shadow-md">
+              <span className="text-white text-xl">📈</span>
             </div>
-          </div>
-          
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <div className="flex items-center">
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4">
-                <span className="text-green-600 text-xl">💰</span>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Financial Records</p>
-                <p className="text-2xl font-bold text-gray-900">{finance.length}</p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <div className="flex items-center">
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
-                <span className="text-purple-600 text-xl">🥛</span>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Milk Records</p>
-                <p className="text-2xl font-bold text-gray-900">{milk.length}</p>
-              </div>
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-bold text-blue-700">Reports & Analytics</h1>
+              <p className="text-gray-600 text-sm sm:text-base">Data-driven insights for your dairy operations</p>
             </div>
           </div>
         </div>
 
-        {/* Charts */}
-        <div className="space-y-8">
+        {/* Enhanced Summary Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-8">
+          <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-4 sm:p-6 border-l-4 border-l-blue-700 group hover:-translate-y-1">
+            <div className="flex items-center">
+              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mr-4 flex-shrink-0">
+                <span className="text-blue-700 text-xl">📊</span>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Data Points</p>
+                <p className="text-xl sm:text-2xl font-bold text-gray-900">{finance.length + milk.length}</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-4 sm:p-6 border-l-4 border-l-emerald-600 group hover:-translate-y-1">
+            <div className="flex items-center">
+              <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center mr-4 flex-shrink-0">
+                <span className="text-emerald-600 text-xl">🥛</span>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Total Milk (L)</p>
+                <p className="text-xl sm:text-2xl font-bold text-gray-900">{totalMilkLiters.toLocaleString()}</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-4 sm:p-6 border-l-4 border-l-amber-600 group hover:-translate-y-1">
+            <div className="flex items-center">
+              <div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center mr-4 flex-shrink-0">
+                <span className="text-amber-600 text-xl">💰</span>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Total Income</p>
+                <p className="text-xl sm:text-2xl font-bold text-gray-900">₹{totalIncome.toLocaleString()}</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-4 sm:p-6 border-l-4 border-l-green-600 group hover:-translate-y-1">
+            <div className="flex items-center">
+              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mr-4 flex-shrink-0">
+                <span className="text-green-600 text-xl">📈</span>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Net Profit</p>
+                <p className={`text-xl sm:text-2xl font-bold ${netProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  ₹{netProfit.toLocaleString()}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Charts Section */}
+        <div className="space-y-6 lg:space-y-8">
           {/* Milk Yield Trend */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <div className="mb-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">Milk Yield Trend</h2>
-              <p className="text-gray-600">Daily milk production over time</p>
+          <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-4 sm:p-6 border-l-4 border-l-emerald-600 group">
+            <div className="flex items-center space-x-3 mb-6">
+              <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
+                <span className="text-emerald-600 text-xl">🥛</span>
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold text-blue-700">Milk Yield Trend</h2>
+                <p className="text-gray-500 text-sm">Daily milk production performance</p>
+              </div>
             </div>
             
             {milk.length === 0 ? (
-              <div className="text-center py-12">
-                <div className="text-4xl mb-4">🥛</div>
-                <p className="text-gray-500 text-lg">No milk data available</p>
-                <p className="text-gray-400 text-sm">Start recording milk production to see trends</p>
+              <div className="text-center py-16">
+                <div className="w-24 h-24 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <span className="text-4xl">🥛</span>
+                </div>
+                <h3 className="text-lg font-medium text-gray-800 mb-2">No milk data available</h3>
+                <p className="text-gray-500 text-sm">Start recording milk production to see trends</p>
+                <button className="mt-4 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+                  Add Milk Record
+                </button>
               </div>
             ) : (
               <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={milk} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                     <XAxis 
                       dataKey="date" 
-                      stroke="#6b7280"
-                      fontSize={12}
+                      stroke="#64748b"
+                      fontSize={11}
                       tickLine={false}
                       axisLine={false}
                     />
                     <YAxis 
-                      stroke="#6b7280"
-                      fontSize={12}
+                      stroke="#64748b"
+                      fontSize={11}
                       tickLine={false}
                       axisLine={false}
-                      label={{ value: 'Liters', angle: -90, position: 'insideLeft', fontSize: 12 }}
+                      label={{ value: 'Liters', angle: -90, position: 'insideLeft', fontSize: 11, style: { textAnchor: 'middle' } }}
                     />
                     <Tooltip 
                       contentStyle={{ 
                         backgroundColor: 'white', 
-                        border: '1px solid #e5e7eb',
-                        borderRadius: '8px',
-                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                        border: '1px solid #e2e8f0',
+                        borderRadius: '12px',
+                        boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                        fontSize: '14px'
                       }}
+                      formatter={(value: number) => [`${value} L`, 'Milk Production']}
+                      labelFormatter={(label) => `Date: ${label}`}
                     />
                     <Line 
                       type="monotone" 
                       dataKey="liters" 
-                      stroke="#3b82f6" 
+                      stroke="#059669" 
                       strokeWidth={3}
-                      dot={{ fill: '#3b82f6', strokeWidth: 2, r: 4 }}
-                      activeDot={{ r: 6, stroke: '#3b82f6', strokeWidth: 2 }}
+                      dot={{ fill: '#059669', strokeWidth: 2, r: 5 }}
+                      activeDot={{ r: 7, stroke: '#059669', strokeWidth: 2, fill: '#ffffff' }}
                     />
                   </LineChart>
                 </ResponsiveContainer>
@@ -170,47 +222,65 @@ export default function ReportsPage() {
           </div>
 
           {/* Income vs Expenses */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <div className="mb-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">Income vs Expenses</h2>
-              <p className="text-gray-600">Financial performance over time</p>
+          <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-4 sm:p-6 border-l-4 border-l-amber-600 group">
+            <div className="flex items-center space-x-3 mb-6">
+              <div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center">
+                <span className="text-amber-600 text-xl">💰</span>
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold text-blue-700">Income vs Expenses</h2>
+                <p className="text-gray-500 text-sm">Financial performance comparison</p>
+              </div>
             </div>
             
             {finance.length === 0 ? (
-              <div className="text-center py-12">
-                <div className="text-4xl mb-4">💰</div>
-                <p className="text-gray-500 text-lg">No financial data available</p>
-                <p className="text-gray-400 text-sm">Start recording sales and expenses to see financial trends</p>
+              <div className="text-center py-16">
+                <div className="w-24 h-24 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <span className="text-4xl">💰</span>
+                </div>
+                <h3 className="text-lg font-medium text-gray-800 mb-2">No financial data available</h3>
+                <p className="text-gray-500 text-sm">Start recording sales and expenses to see financial trends</p>
+                <button className="mt-4 bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+                  Add Financial Record
+                </button>
               </div>
             ) : (
               <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={finance} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                     <XAxis 
                       dataKey="date" 
-                      stroke="#6b7280"
-                      fontSize={12}
+                      stroke="#64748b"
+                      fontSize={11}
                       tickLine={false}
                       axisLine={false}
                     />
                     <YAxis 
-                      stroke="#6b7280"
-                      fontSize={12}
+                      stroke="#64748b"
+                      fontSize={11}
                       tickLine={false}
                       axisLine={false}
-                      label={{ value: 'Amount (₹)', angle: -90, position: 'insideLeft', fontSize: 12 }}
+                      label={{ value: 'Amount (₹)', angle: -90, position: 'insideLeft', fontSize: 11, style: { textAnchor: 'middle' } }}
                     />
                     <Tooltip 
                       contentStyle={{ 
                         backgroundColor: 'white', 
-                        border: '1px solid #e5e7eb',
-                        borderRadius: '8px',
-                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                        border: '1px solid #e2e8f0',
+                        borderRadius: '12px',
+                        boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                        fontSize: '14px'
                       }}
-                      formatter={(value: number) => [`₹${value.toFixed(2)}`, '']}
+                      formatter={(value: number, name: string) => [
+                        `₹${value.toLocaleString()}`, 
+                        name === 'milkIncome' ? 'Income' : 'Expenses'
+                      ]}
+                      labelFormatter={(label) => `Date: ${label}`}
                     />
-                    <Legend />
+                    <Legend 
+                      wrapperStyle={{ paddingTop: '20px' }}
+                      iconType="rect"
+                    />
                     <Bar 
                       dataKey="milkIncome" 
                       fill="#10b981" 
@@ -229,45 +299,85 @@ export default function ReportsPage() {
             )}
           </div>
 
-          {/* Data Table */}
-          <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-900">Recent Financial Data</h2>
-              <p className="text-sm text-gray-600 mt-1">Latest {Math.min(finance.length, 10)} records</p>
+          {/* Enhanced Financial Data Table */}
+          <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border-l-4 border-l-blue-700 group">
+            <div className="p-4 sm:p-6 border-b border-gray-100">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                    <span className="text-blue-700 text-xl">📋</span>
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-semibold text-blue-700">Financial Summary</h2>
+                    <p className="text-gray-500 text-sm">Recent {Math.min(finance.length, 10)} records</p>
+                  </div>
+                </div>
+                <div className="hidden sm:flex items-center space-x-4 text-sm">
+                  <div className="flex items-center">
+                    <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+                    <span className="text-gray-600">Income</span>
+                  </div>
+                  <div className="flex items-center">
+                    <div className="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
+                    <span className="text-gray-600">Expenses</span>
+                  </div>
+                </div>
+              </div>
             </div>
             
             {finance.length === 0 ? (
-              <div className="text-center py-8">
-                <p className="text-gray-500">No financial records to display</p>
+              <div className="text-center py-12">
+                <div className="text-5xl mb-4">📊</div>
+                <h3 className="text-lg font-medium text-gray-800 mb-2">No financial records</h3>
+                <p className="text-gray-500 text-sm">Add income and expense records to see financial summary</p>
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Income</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expenses</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Net</th>
+                      <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                      <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Income</th>
+                      <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expenses</th>
+                      <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Net Profit</th>
+                      <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {finance.slice(0, 10).map((row, index) => (
-                      <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{row.date}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="text-green-600 font-medium">₹{row.milkIncome.toFixed(2)}</span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="text-red-600 font-medium">₹{row.expense.toFixed(2)}</span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`font-medium ${(row.milkIncome - row.expense) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                            ₹{(row.milkIncome - row.expense).toFixed(2)}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
+                  <tbody className="bg-white divide-y divide-gray-100">
+                    {finance.slice(0, 10).map((row, index) => {
+                      const netAmount = row.milkIncome - row.expense;
+                      const isProfit = netAmount >= 0;
+                      
+                      return (
+                        <tr key={index} className="hover:bg-blue-50 transition-colors">
+                          <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{row.date}</td>
+                          <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                              ₹{row.milkIncome.toLocaleString()}
+                            </span>
+                          </td>
+                          <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                              ₹{row.expense.toLocaleString()}
+                            </span>
+                          </td>
+                          <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+                            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                              isProfit ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                            }`}>
+                              ₹{netAmount.toLocaleString()}
+                            </span>
+                          </td>
+                          <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+                            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                              isProfit ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                            }`}>
+                              {isProfit ? '📈 Profit' : '📉 Loss'}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -278,5 +388,3 @@ export default function ReportsPage() {
     </div>
   );
 }
-
-

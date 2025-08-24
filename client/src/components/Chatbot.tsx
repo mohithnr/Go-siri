@@ -195,7 +195,7 @@ export default function Chatbot() {
       {/* Chatbot Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-50 bg-green-600 text-white p-4 rounded-full shadow-lg hover:bg-green-700 transition-all duration-300 hover:scale-110"
+        className="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-blue-700 to-emerald-600 hover:from-blue-800 hover:to-emerald-700 text-white p-4 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-110"
         aria-label="Open chatbot"
       >
         {isOpen ? (
@@ -203,39 +203,55 @@ export default function Chatbot() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         ) : (
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-          </svg>
+          <div className="flex items-center space-x-1">
+            <span className="text-lg">🤖</span>
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+          </div>
         )}
       </button>
 
       {/* Chatbot Interface */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 z-40 w-96 h-[600px] bg-white rounded-xl shadow-2xl border border-gray-200 flex flex-col">
+        <div className="fixed bottom-24 right-6 z-40 w-80 sm:w-96 h-[600px] bg-white rounded-xl shadow-2xl border border-gray-200 flex flex-col animate-in slide-in-from-bottom-4 fade-in duration-300">
           {/* Header */}
-          <div className="bg-gradient-to-r from-green-600 to-green-700 text-white p-4 rounded-t-xl">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                <span className="text-2xl">🐄</span>
+          <div className="bg-gradient-to-r from-blue-700 to-emerald-600 text-white p-4 rounded-t-xl">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-white bg-opacity-20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                  <span className="text-2xl">🤖</span>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-white">AI Dairy Assistant</h3>
+                  <p className="text-sm text-white text-opacity-80">Powered by Gemini AI</p>
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold">Dairy Farming Assistant</h3>
-                <p className="text-sm text-green-100">Powered by Gemini AI</p>
-              </div>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="text-white hover:text-gray-200 p-1 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </div>
           </div>
 
           {/* Language and Problem Selection */}
-          <div className="p-4 border-b border-gray-200 bg-gray-50">
+          <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-emerald-50">
             <div className="space-y-3">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Language / भाषा
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <span className="inline-flex items-center space-x-2">
+                    <span>🌍</span>
+                    <span>Language / भाषा</span>
+                  </span>
                 </label>
                 <select
                   value={selectedLanguage}
                   onChange={(e) => handleLanguageChange(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 text-gray-700 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
+                  className="w-full px-3 py-2 border border-gray-300 text-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white transition-colors"
                 >
                   {LANGUAGES.map((lang) => (
                     <option key={lang.code} value={lang.code}>
@@ -246,13 +262,16 @@ export default function Chatbot() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Common Problems / सामान्य समस्याएं
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <span className="inline-flex items-center space-x-2">
+                    <span>🩺</span>
+                    <span>Common Problems / सामान्य समस्याएं</span>
+                  </span>
                 </label>
                 <select
                   value={selectedProblem}
                   onChange={(e) => handleProblemSelect(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 text-gray-700 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
+                  className="w-full px-3 py-2 border border-gray-300 text-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white transition-colors"
                 >
                   <option value="">Select a common problem...</option>
                   {commonProblems.map((problem) => (
@@ -266,24 +285,24 @@ export default function Chatbot() {
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 text-gray-700  space-y-4">
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
             {messages.map((message) => (
               <div
                 key={message.id}
                 className={`flex ${message.isUser ? "justify-end" : "justify-start"}`}
               >
                 <div
-                  className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                  className={`max-w-[85%] px-4 py-3 rounded-2xl shadow-sm ${
                     message.isUser
-                      ? "bg-green-600 text-white"
-                      : "bg-gray-100 text-gray-800"
+                      ? "bg-gradient-to-r from-blue-700 to-emerald-600 text-white rounded-br-md"
+                      : "bg-white text-gray-800 border border-gray-200 rounded-bl-md"
                   }`}
                 >
-                  <p className="text-sm">{message.text}</p>
-                  <p className={`text-xs mt-1 ${
-                    message.isUser ? "text-green-100" : "text-gray-500"
+                  <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.text}</p>
+                  <p className={`text-xs mt-2 ${
+                    message.isUser ? "text-white text-opacity-70" : "text-gray-500"
                   }`}>
-                    {message.timestamp.toLocaleTimeString()}
+                    {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </p>
                 </div>
               </div>
@@ -291,14 +310,14 @@ export default function Chatbot() {
             
             {isLoading && (
               <div className="flex justify-start">
-                <div className="bg-gray-100 text-gray-800 max-w-xs lg:max-w-md px-4 py-2 rounded-lg">
-                  <div className="flex items-center space-x-2">
+                <div className="bg-white text-gray-800 max-w-[85%] px-4 py-3 rounded-2xl rounded-bl-md shadow-sm border border-gray-200">
+                  <div className="flex items-center space-x-3">
                     <div className="flex space-x-1">
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
+                      <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce"></div>
+                      <div className="w-2 h-2 bg-emerald-600 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
+                      <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
                     </div>
-                    <span className="text-sm text-gray-600">AI is thinking...</span>
+                    <span className="text-sm text-gray-600 font-medium">AI is thinking...</span>
                   </div>
                 </div>
               </div>
@@ -308,30 +327,35 @@ export default function Chatbot() {
           </div>
 
           {/* Input */}
-          <div className="p-4 border-t border-gray-200">
+          <div className="p-4 border-t border-gray-200 bg-white">
             <div className="flex space-x-2">
               <input
                 type="text"
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Type your question or problem here..."
-                className="flex-1 px-3 py-2 border border-gray-300 text-gray-700 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
+                placeholder="Type your farming question here..."
+                className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm transition-all"
                 disabled={isLoading}
               />
               <button
                 onClick={handleSendMessage}
                 disabled={isLoading || (!inputText.trim() && !selectedProblem)}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-3 bg-gradient-to-r from-blue-700 to-emerald-600 hover:from-blue-800 hover:to-emerald-700 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                 </svg>
               </button>
             </div>
-            <p className="text-xs text-gray-500 mt-2 text-center">
-              You can ask about cow health, breeding, nutrition, or any farming questions
-            </p>
+            <div className="mt-3 p-3 bg-gradient-to-r from-blue-50 to-emerald-50 rounded-lg border border-blue-100">
+              <p className="text-xs text-center text-gray-600 leading-relaxed">
+                <span className="inline-flex items-center space-x-1">
+                  <span>🐄</span>
+                  <span>Ask about cow health, breeding, nutrition, or any farming questions</span>
+                </span>
+              </p>
+            </div>
           </div>
         </div>
       )}
