@@ -7,6 +7,7 @@ A full-stack dairy management application built with Next.js 14 and Express.js, 
 - **Authentication**: Secure JWT-based login/registration for farmers
 - **Dashboard**: Overview of daily milk collection, sales, expenses, and profit/loss
 - **Cow Management**: Add and manage individual cows with details
+- **AI chatbot**:Multi language AI chatbot to help farmers regarding Dairy farming
 - **Milk Records**: Track morning and evening milk production per cow
 - **Sales Tracking**: Record milk sales with automatic calculations
 - **Expense Management**: Log farm expenses with notes
