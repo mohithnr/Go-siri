@@ -48,15 +48,16 @@ export default function DashboardPage() {
   const [summary, setSummary] = useState<DisplaySummary | null>(null);
   const [reminders, setReminders] = useState<Reminder[]>([]);
   const [loading, setLoading] = useState(true);
+  // Show help modal state
+  const [showHelp, setShowHelp] = useState(false);
 
   useEffect(() => {
     if (!token) return;
-    
     const loadData = async () => {
       try {
         const [apiSummary, remindersData] = await Promise.all([
           apiFetch<ApiSummary>("/finance/summary"),
-          apiFetch<Reminder[]>("/breeding/reminders")
+          apiFetch<Reminder[]>("/breeding/reminders"),
         ]);
         const mapped: DisplaySummary = {
           todayMilk: apiSummary?.today?.milkCollected ?? 0,
@@ -73,7 +74,6 @@ export default function DashboardPage() {
         setLoading(false);
       }
     };
-
     loadData();
   }, [token]);
 
@@ -111,7 +111,7 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-gray-50 to-emerald-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
-        
+
         {/* Header */}
         <div className="mb-8 text-center">
           <div className="flex items-center justify-center space-x-3 mb-4">
@@ -120,7 +120,9 @@ export default function DashboardPage() {
             </div>
             <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">Gosiri Dashboard</h1>
           </div>
-          <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto">Smart Dairy Management at Your Fingertips</p>
+          <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto">
+            Smart Dairy Management at Your Fingertips
+          </p>
         </div>
 
         {/* Quick Actions */}
@@ -132,7 +134,6 @@ export default function DashboardPage() {
             <h3 className="font-semibold text-gray-900 mb-1 sm:mb-2 text-sm sm:text-base">Record Milk</h3>
             <p className="text-xs sm:text-sm text-gray-600 hidden sm:block">Add production data</p>
           </a>
-          
           <a href="/sales" className="bg-white rounded-xl shadow-lg hover:shadow-xl p-4 sm:p-6 transition-all duration-300 text-center group hover:-translate-y-1">
             <div className="w-12 h-12 sm:w-16 sm:h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
               <span className="text-2xl sm:text-3xl">💰</span>
@@ -140,7 +141,6 @@ export default function DashboardPage() {
             <h3 className="font-semibold text-gray-900 mb-1 sm:mb-2 text-sm sm:text-base">Record Sales</h3>
             <p className="text-xs sm:text-sm text-gray-600 hidden sm:block">Track revenue</p>
           </a>
-          
           <a href="/expenses" className="bg-white rounded-xl shadow-lg hover:shadow-xl p-4 sm:p-6 transition-all duration-300 text-center group hover:-translate-y-1">
             <div className="w-12 h-12 sm:w-16 sm:h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
               <span className="text-2xl sm:text-3xl">📝</span>
@@ -148,7 +148,6 @@ export default function DashboardPage() {
             <h3 className="font-semibold text-gray-900 mb-1 sm:mb-2 text-sm sm:text-base">Add Expenses</h3>
             <p className="text-xs sm:text-sm text-gray-600 hidden sm:block">Track costs</p>
           </a>
-          
           <a href="/cows" className="bg-white rounded-xl shadow-lg hover:shadow-xl p-4 sm:p-6 transition-all duration-300 text-center group hover:-translate-y-1">
             <div className="w-12 h-12 sm:w-16 sm:h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
               <span className="text-2xl sm:text-3xl">🐄</span>
@@ -175,7 +174,6 @@ export default function DashboardPage() {
               </div>
             </div>
           </Card>
-          
           <Card 
             title="Today's Sales" 
             value={`₹${summary?.todaySales || 0}`} 
@@ -191,7 +189,6 @@ export default function DashboardPage() {
               </div>
             </div>
           </Card>
-          
           <Card 
             title="Monthly Milk" 
             value={`${summary?.monthMilk || 0} L`} 
@@ -207,7 +204,6 @@ export default function DashboardPage() {
               </div>
             </div>
           </Card>
-          
           <Card 
             title="Monthly Revenue" 
             value={`₹${summary?.monthRevenue || 0}`} 
@@ -223,7 +219,6 @@ export default function DashboardPage() {
               </div>
             </div>
           </Card>
-          
           <Card 
             title="Monthly Profit" 
             value={`₹${summary?.monthProfit ? Math.round(summary.monthProfit * 100) / 100 : 0}`} 
@@ -256,7 +251,6 @@ export default function DashboardPage() {
               </div>
             </div>
           </div>
-          
           {reminders.length === 0 ? (
             <div className="text-center py-8 sm:py-12 px-4">
               <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -295,7 +289,6 @@ export default function DashboardPage() {
               ))}
             </div>
           )}
-          
           {reminders.length > 5 && (
             <div className="px-4 sm:px-6 py-3 bg-gray-50 text-center">
               <a href="/breeding" className="text-sm text-blue-700 hover:text-blue-800 font-medium inline-flex items-center space-x-1">
@@ -305,6 +298,142 @@ export default function DashboardPage() {
             </div>
           )}
         </div>
+
+        {/* Help Icon/Button - fixed position above AI icon */}
+        <div className="fixed bottom-28 right-5 z-50">
+          <button
+            type="button"
+            className="bg-white shadow-lg rounded-full p-4 flex items-center space-x-2 hover:bg-blue-50 transition-colors border border-blue-200"
+            onClick={() => setShowHelp(true)}
+            aria-label="Help: How to use platform"
+          >
+            <span className="text-xl text-blue-700">❓</span>
+            <span className="font-medium text-sm text-blue-700 hidden sm:inline">Help</span>
+          </button>
+        </div>
+
+        {/* Help Modal */}
+{showHelp && (
+  <div 
+    className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
+    aria-modal="true" role="dialog"
+    aria-labelledby="help-dialog-title"
+    aria-describedby="help-dialog-description"
+  >
+    <div 
+      className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-8 relative transform transition-transform duration-300 scale-95 opacity-0 animate-scaleFadeIn"
+      style={{animationFillMode: 'forwards'}}
+    >
+      <button
+        aria-label="Close Help"
+        onClick={() => setShowHelp(false)}
+        className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" 
+          viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+      
+      <div className="flex flex-col items-center text-center space-y-4 pb-4 border-b border-gray-200">
+        <span className="text-4xl text-blue-600">❓</span>
+        <h2 id="help-dialog-title" className="text-2xl font-bold text-gray-900">How to Use the Platform</h2>
+        <p id="help-dialog-description" className="text-gray-600 max-w-xs sm:max-w-md mx-auto">
+          Easily manage your dairy operations with these simple steps:
+        </p>
+      </div>
+
+      <ul className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-6 text-left text-gray-800">
+        <li className="flex space-x-4 items-start">
+          <span className="text-3xl">🐄</span>
+          <div>
+            <h3 className="font-semibold text-lg">Add cows</h3>
+            <p className="text-sm text-gray-600">Keep records of all animals in your herd.</p>
+          </div>
+        </li>
+        <li className="flex space-x-4 items-start">
+          <span className="text-3xl">💵</span>
+          <div>
+            <h3 className="font-semibold text-lg">Set price</h3>
+            <p className="text-sm text-gray-600">Configure milk prices & sales rates easily.</p>
+          </div>
+        </li>
+        <li className="flex space-x-4 items-start">
+          <span className="text-3xl">🥛</span>
+          <div>
+            <h3 className="font-semibold text-lg">Add milk</h3>
+            <p className="text-sm text-gray-600">Log daily milk production for tracking.</p>
+          </div>
+        </li>
+        <li className="flex space-x-4 items-start">
+          <span className="text-3xl">🛒</span>
+          <div>
+            <h3 className="font-semibold text-lg">Record sales</h3>
+            <p className="text-sm text-gray-600">Track revenue from milk sales.</p>
+          </div>
+        </li>
+        <li className="flex space-x-4 items-start">
+          <span className="text-3xl">🧾</span>
+          <div>
+            <h3 className="font-semibold text-lg">Add expenses</h3>
+            <p className="text-sm text-gray-600">Manage costs like feed, medicine, and labor.</p>
+          </div>
+        </li>
+        <li className="flex space-x-4 items-start">
+          <span className="text-3xl">🐣</span>
+          <div>
+            <h3 className="font-semibold text-lg">Breeding & calving</h3>
+            <p className="text-sm text-gray-600">Monitor breeding cycles and new births.</p>
+          </div>
+        </li>
+        <li className="flex space-x-4 items-start">
+          <span className="text-3xl">📊</span>
+          <div>
+            <h3 className="font-semibold text-lg">See reports</h3>
+            <p className="text-sm text-gray-600">Visualize profits and production trends.</p>
+          </div>
+        </li>
+        <li className="flex space-x-4 items-start">
+          <span className="text-3xl">🤖</span>
+          <div>
+            <h3 className="font-semibold text-lg">Use AI Assistant</h3>
+            <p className="text-sm text-gray-600">Get expert advice anytime in your language.</p>
+          </div>
+        </li>
+      </ul>
+
+      <div className="mt-8 flex justify-center">
+        <button
+          onClick={() => setShowHelp(false)}
+          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg transition-colors"
+          autoFocus
+        >
+          Got it
+        </button>
+      </div>
+    </div>
+
+    <style jsx>{`
+      @keyframes scaleFadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      .animate-scaleFadeIn {
+        animation-name: scaleFadeIn;
+        animation-duration: 0.25s;
+        animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        animation-fill-mode: forwards;
+      }
+    `}</style>
+  </div>
+)}
+
 
         {/* AI Assistant Section */}
         <div className="bg-gradient-to-br from-blue-600 to-emerald-600 rounded-xl shadow-lg overflow-hidden">
@@ -326,7 +455,6 @@ export default function DashboardPage() {
                   <h3 className="font-semibold mb-1 text-sm sm:text-base text-black ">Multi-Language</h3>
                   <p className="text-xs sm:text-sm text-black text-opacity-80">Hindi, Telugu, Tamil & more</p>
                 </div>
-                
                 <div className="bg-white bg-opacity-15 backdrop-blur-sm p-4 rounded-lg border border-white border-opacity-30">
                   <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white bg-opacity-25 rounded-full flex items-center justify-center mx-auto mb-3">
                     <span className="text-lg sm:text-xl">🐄</span>
@@ -334,7 +462,6 @@ export default function DashboardPage() {
                   <h3 className="font-semibold mb-1 text-sm sm:text-base text-black">Expert Advice</h3>
                   <p className="text-xs sm:text-sm text-black text-opacity-80">Health, breeding & nutrition</p>
                 </div>
-                
                 <div className="bg-white bg-opacity-15 backdrop-blur-sm p-4 rounded-lg border border-white border-opacity-30">
                   <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white bg-opacity-25 rounded-full flex items-center justify-center mx-auto mb-3">
                     <span className="text-lg sm:text-xl">⚡</span>
@@ -358,7 +485,6 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
-        
       </div>
     </div>
   );

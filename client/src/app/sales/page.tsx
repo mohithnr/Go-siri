@@ -30,6 +30,12 @@ type CurrentPrices = {
   history: PriceHistory[];
 };
 
+type Cow = {
+  _id: string;
+  name: string;
+  // Add other cow properties as needed
+};
+
 export default function SalesPage() {
   const { token } = useAuth();
   const [history, setHistory] = useState<FinanceRow[]>([]);
@@ -43,6 +49,28 @@ export default function SalesPage() {
   const [priceLoading, setPriceLoading] = useState(false);
   const [currentPrices, setCurrentPrices] = useState<CurrentPrices>({ current: null, history: [] });
 
+  // Cow list state and modal
+  const [cows, setCows] = useState<Cow[]>([]);
+  const [loadingCows, setLoadingCows] = useState(true);
+  const [showAddCowsModal, setShowAddCowsModal] = useState(false);
+
+  // Load cow list for new user check
+  async function loadCows() {
+    try {
+      setLoadingCows(true);
+      const list = await apiFetch<Cow[]>("/cows/list");
+      setCows(list);
+      if (list.length === 0) {
+        setShowAddCowsModal(true);
+      }
+    } catch (error) {
+      console.error("Failed to load cows:", error);
+    } finally {
+      setLoadingCows(false);
+    }
+  }
+
+  // Load history and prices
   async function loadHistory() {
     try {
       setLoading(true);
@@ -72,6 +100,7 @@ export default function SalesPage() {
     if (token) {
       loadHistory();
       loadPrices();
+      loadCows();
     }
   }, [token]);
 
@@ -109,7 +138,6 @@ export default function SalesPage() {
         from = effective;
         to = new Date(effective.getTime() + 15 * dayMs);
       } else {
-        // from date onward: recalc a wide forward range (e.g., 1 year)
         from = effective;
         to = new Date(effective.getTime() + 365 * dayMs);
       }
@@ -162,6 +190,25 @@ export default function SalesPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-gray-50 to-emerald-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+        {/* Add Cows Modal */}
+        {showAddCowsModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-xl shadow-xl max-w-md p-6 mx-4 text-center">
+              <h2 className="text-xl font-bold mb-4">Welcome!</h2>
+              <p className="mb-6 text-gray-700">
+                Please add your cows data before setting or updating the milk price.
+              </p>
+              <a 
+                href="/cows" 
+                className="inline-block bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-6 py-3 font-medium transition-colors"
+                onClick={() => setShowAddCowsModal(false)}
+              >
+                Add Cows Now
+              </a>
+            </div>
+          </div>
+        )}
+
         {/* Header */}
         <div className="mb-6 sm:mb-8">
           <div className="flex items-center mb-4">
@@ -228,7 +275,8 @@ export default function SalesPage() {
         )}
 
         {/* Milk Price Management */}
-        <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-4 sm:p-6 border-l-4 border-emerald-600 mb-6 sm:mb-8 group hover:-translate-y-1">
+        <div className={`bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-4 sm:p-6 border-l-4 border-emerald-600 mb-6 sm:mb-8 group hover:-translate-y-1
+          ${showAddCowsModal ? 'pointer-events-none opacity-50' : ''}`}>
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-6">
               <div className="inline-flex items-center justify-center w-12 h-12 bg-emerald-100 rounded-lg mb-3">
@@ -238,7 +286,7 @@ export default function SalesPage() {
               <p className="text-gray-600 mt-2">Set new pricing and recalculate sales automatically</p>
             </div>
             
-            <form onSubmit={applyPrice} className="space-y-6">
+            <form onSubmit={applyPrice} className="space-y-6" aria-disabled={showAddCowsModal}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 <div>
                   <label className="block text-sm font-bold text-blue-700 mb-2">
@@ -250,6 +298,7 @@ export default function SalesPage() {
                     value={priceDate} 
                     onChange={(e) => setPriceDate(e.target.value)}
                     required
+                    disabled={showAddCowsModal}
                   />
                 </div>
 
@@ -266,6 +315,7 @@ export default function SalesPage() {
                     onChange={(e) => setPriceValue(e.target.value)}
                     placeholder="0.00"
                     required
+                    disabled={showAddCowsModal}
                   />
                 </div>
               </div>
@@ -278,6 +328,7 @@ export default function SalesPage() {
                   className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900"
                   value={priceScope}
                   onChange={(e) => setPriceScope(e.target.value as PriceScope)}
+                  disabled={showAddCowsModal}
                 >
                   <option value="prev15">Previous 15 days</option>
                   <option value="next15">Next 15 days</option>
@@ -290,7 +341,7 @@ export default function SalesPage() {
               </div>
 
               <button 
-                disabled={priceLoading || Number(priceValue) <= 0}
+                disabled={priceLoading || Number(priceValue) <= 0 || showAddCowsModal}
                 className="w-full bg-gradient-to-r from-blue-700 to-emerald-600 hover:from-blue-800 hover:to-emerald-700 text-white px-6 py-4 rounded-lg font-medium transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105"
               >
                 {priceLoading ? (
@@ -332,7 +383,7 @@ export default function SalesPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {currentPrices.history.slice(0, 5).map((price, index) => (
+                  {currentPrices.history.slice(0, 5).map((price) => (
                     <tr key={price._id} className="hover:bg-blue-50 transition-colors duration-200">
                       <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                         {new Date(price.effectiveFrom).toLocaleDateString()}
@@ -406,7 +457,7 @@ export default function SalesPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {history.map((r, index) => (
+                  {history.map((r) => (
                     <tr key={r._id} className="hover:bg-gradient-to-r hover:from-blue-25 hover:to-emerald-25 transition-all duration-200">
                       <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                         {new Date(r.date).toLocaleDateString()}
